@@ -5,7 +5,7 @@
 from unittest.mock import Mock
 
 import pytest
-from source_zoho_crm.api import ZohoAPI
+from source_zoho_recruit.api import ZohoAPI
 
 
 @pytest.fixture
@@ -45,8 +45,8 @@ def test_api_url(config, region, environment, expected_result):
 
 
 def mock_request(mocker, request):
-    mocker.patch("source_zoho_crm.api.requests.get", request)
-    mocker.patch("source_zoho_crm.api.ZohoOauth2Authenticator.get_auth_header", Mock(return_value={}))
+    mocker.patch("source_zoho_recruit.api.requests.get", request)
+    mocker.patch("source_zoho_recruit.api.ZohoOauth2Authenticator.get_auth_header", Mock(return_value={}))
 
 
 def test_check_connection_success(mocker, request_mocker, config):

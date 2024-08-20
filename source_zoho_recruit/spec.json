@@ -1,8 +1,8 @@
 {
-  "documentationUrl": "https://docs.airbyte.com/integrations/sources/zoho-crm",
+  "documentationUrl": "https://docs.airbyte.com/integrations/sources/zoho-recruit",
   "connectionSpecification": {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Zoho Crm Configuration",
+    "title": "Zoho Recruit Configuration",
     "type": "object",
     "required": [
       "client_id",
@@ -35,7 +35,7 @@
       "dc_region": {
         "title": "Data Center Location",
         "type": "string",
-        "description": "Please choose the region of your Data Center location. More info by this <a href=\"https://www.zoho.comrecruitdeveloper/docs/api/v2/multi-dc.html\">Link</a>",
+        "description": "Please choose the region of your Data Center location. More info by this <a href=\"https://www.zoho.com/recruit/developer/docs/api/v2/multi-dc.html\">Link</a>",
         "enum": ["US", "AU", "EU", "IN", "CN", "JP"]
       },
       "environment": {
@@ -58,9 +58,9 @@
         "format": "date-time"
       },
       "edition": {
-        "title": "Zoho CRM Edition",
+        "title": "Zoho Recruit Edition",
         "type": "string",
-        "description": "Choose your Edition of Zoho CRM to determine API Concurrency Limits",
+        "description": "Choose your Edition of Zoho Recruit to determine API Concurrency Limits",
         "enum": ["Free", "Standard", "Professional", "Enterprise", "Ultimate"],
         "default": "Free"
       }

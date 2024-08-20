@@ -4,7 +4,7 @@ FROM python:3.9-slim
 RUN apt-get update && apt-get install -y bash && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /airbyte/integration_code
-COPY source_zoho_crm ./source_zoho_crm
+COPY source_zoho_recruit ./source_zoho_recruit
 COPY main.py ./
 COPY setup.py ./
 RUN pip install .
@@ -13,4 +13,4 @@ ENV AIRBYTE_ENTRYPOINT "python /airbyte/integration_code/main.py"
 ENTRYPOINT ["python", "/airbyte/integration_code/main.py"]
 
 LABEL io.airbyte.version=0.1.2
-LABEL io.airbyte.name=airbyte/source-zoho-crm
+LABEL io.airbyte.name=airbyte/source-zoho-recruit

@@ -18,11 +18,11 @@ TEST_REQUIREMENTS = [
 setup(
     entry_points={
         "console_scripts": [
-            "source-zoho-crm=source_zoho_crm.run:run",
+            "source-zoho-recruit=source_zoho_recruit.run:run",
         ],
     },
-    name="source_zoho_crm",
-    description="Source implementation for Zoho Crm.",
+    name="source_zoho_recruit",
+    description="Source implementation for Zoho Recruit.",
     author="Airbyte",
     author_email="contact@airbyte.io",
     packages=find_packages(),

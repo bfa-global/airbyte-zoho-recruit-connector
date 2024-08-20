@@ -27,12 +27,12 @@ class ZohoAPI:
     )
     _DC_REGION_TO_API_URL = MappingProxyType(
         {
-            "US": "https://zohoapis.com",
-            "AU": "https://zohoapis.com.au",
-            "EU": "https://zohoapis.eu",
-            "IN": "https://zohoapis.in",
-            "CN": "https://zohoapis.com.cn",
-            "JP": "https://zohoapis.jp",
+            "US": "https://recruit.zoho.com",
+            "AU": "https://recruit.zoho.com.au",
+            "EU": "https://recruit.zoho.eu",
+            "IN": "https://recruit.zoho.in",
+            "CN": "https://recruit.zoho.com.cn",
+            "JP": "https://recruit.zoho.jp",
         }
     )
     _API_ENV_TO_URL_PREFIX = MappingProxyType({"production": "", "developer": "developer", "sandbox": "sandbox"})
@@ -70,22 +70,25 @@ class ZohoAPI:
     def _json_from_path(self, path: str, key: str, params: MutableMapping[str, str] = None) -> List[MutableMapping[Any, Any]]:
         response = requests.get(url=f"{self.api_url}{path}", headers=self.authenticator.get_auth_header(), params=params or {})
         if response.status_code == 204:
-            # Zoho CRM returns `No content` for Metadata of some modules
+            # Zoho Recruit returns `No content` for Metadata of some modules
             logger.warning(f"{key.capitalize()} Metadata inaccessible: {response.content} [HTTP status {response.status_code}]")
             return []
         return response.json()[key]
 
     def module_settings(self, module_name: str) -> List[MutableMapping[Any, Any]]:
-        return self._json_from_path(f"recruitv2/settings/modules/{module_name}", key="modules")
+        return self._json_from_path(f"/recruit/v2/settings/modules/{module_name}", key="modules")
 
     def modules_settings(self) -> List[MutableMapping[Any, Any]]:
-        return self._json_from_path("recruitv2/settings/modules", key="modules")
+        return self._json_from_path("/recruit/v2/settings/modules", key="modules")
 
     def fields_settings(self, module_name: str) -> List[MutableMapping[Any, Any]]:
-        return self._json_from_path("recruitv2/settings/fields", key="fields", params={"module": module_name})
+        # print("getting field settings for ", module_name)
+        json = self._json_from_path("/recruit/v2/settings/fields", key="fields", params={"module": module_name})
+        # print("got field settings for ", module_name, [{ "api_name": field.api_name } for field in json])
+        return json
 
     def check_connection(self) -> Tuple[bool, Any]:
-        path = "recruitv2/settings/modules"
+        path = "/recruit/v2/settings/modules"
         response = requests.get(url=f"{self.api_url}{path}", headers=self.authenticator.get_auth_header())
         try:
             response.raise_for_status()

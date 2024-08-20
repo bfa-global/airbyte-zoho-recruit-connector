@@ -4,14 +4,14 @@
 
 from unittest.mock import Mock
 
-from source_zoho_crm.auth import ZohoOauth2Authenticator
+from source_zoho_recruit.auth import ZohoOauth2Authenticator
 
 authenticator = ZohoOauth2Authenticator("http://dummy.url/oauth/v2/token", "client_id", "client_secret", "refresh_token")
 
 
 def test_refresh_access_token(mocker, request_mocker):
     request = request_mocker(content=b'{"access_token": "access_token", "expires_in": 86400}')
-    mocker.patch("source_zoho_crm.auth.requests.request", request)
+    mocker.patch("source_zoho_recruit.auth.requests.request", request)
 
     token, expires = authenticator.refresh_access_token()
     assert (token, expires) == ("access_token", 24 * 60 * 60)

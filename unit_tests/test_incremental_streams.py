@@ -6,15 +6,15 @@ from unittest.mock import Mock
 
 import pytest
 from airbyte_cdk.models import SyncMode
-from source_zoho_crm.streams import IncrementalZohoCrmStream as BaseIncrementalZohoCrmStream
+from source_zoho_recruit.streams import IncrementalZohoRecruitStream as BaseIncrementalZohoRecruitStream
 
 
 @pytest.fixture
 def stream_factory(mocker):
     def wrapper(stream_name, schema=None):
-        class IncrementalZohoStream(BaseIncrementalZohoCrmStream):
+        class IncrementalZohoStream(BaseIncrementalZohoRecruitStream):
             url_base = "https://dummy.com"
-            _path = f"recruitv2/{stream_name}"
+            _path = f"/recruit/v2/{stream_name}"
             json_schema = schema or {}
             primary_key = "id"
 
@@ -32,7 +32,7 @@ def test_updated_state(mocker, stream_factory):
     stream = stream_factory("Leads")
     assert stream.state == {"Modified_Time": "1970-01-01T00:00:00+00:00"}
     mocker.patch(
-        "source_zoho_crm.streams.HttpStream.read_records",
+        "source_zoho_recruit.streams.HttpStream.read_records",
         Mock(
             return_value=[
                 {"Name": "Joan", "Surname": "Arc", "Modified_Time": "2021-12-12T13:15:09+02:00"},

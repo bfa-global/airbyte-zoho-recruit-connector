@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 import requests
-from source_zoho_crm.streams import IncrementalZohoCrmStream, ZohoStreamFactory
+from source_zoho_recruit.streams import IncrementalZohoRecruitStream, ZohoStreamFactory
 
 HERE = Path(__file__).parent
 
@@ -26,7 +26,7 @@ def request_sniffer(mocker):
         def decorator(func):
             def inner(*args, **kwargs):
                 resp = func(*args, **kwargs)
-                stats[resp.url.split("/crm", 1)[-1]] = resp.status_code
+                stats[resp.url.split("/recruit", 1)[-1]] = resp.status_code
                 return resp
 
             return inner
@@ -35,8 +35,8 @@ def request_sniffer(mocker):
 
     stats = {}
     decorated = request_decorator(stats)
-    mocker.patch("source_zoho_crm.api.requests.request", decorated(requests.request))
-    mocker.patch("source_zoho_crm.api.requests.get", decorated(requests.get))
+    mocker.patch("source_zoho_recruit.api.requests.request", decorated(requests.request))
+    mocker.patch("source_zoho_recruit.api.requests.get", decorated(requests.get))
     return stats
 
 
@@ -82,7 +82,7 @@ def test_stream_factory(request_sniffer, config):
     stream_names = set()
     for stream in streams:
         assert stream.supports_incremental
-        assert isinstance(stream, IncrementalZohoCrmStream)
+        assert isinstance(stream, IncrementalZohoRecruitStream)
         assert stream.primary_key
         assert stream.url_base
         assert stream.path()

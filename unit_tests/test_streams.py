@@ -6,14 +6,14 @@ from http import HTTPStatus
 from unittest.mock import Mock
 
 import pytest
-from source_zoho_crm.streams import ZohoCrmStream
-from source_zoho_crm.types import FieldMeta, ModuleMeta
+from source_zoho_recruit.streams import ZohoRecruitStream
+from source_zoho_recruit.types import FieldMeta, ModuleMeta
 
 
 @pytest.fixture
 def stream_factory(mocker):
     def wrapper(stream_module=None):
-        class FullRefreshZohoStream(ZohoCrmStream):
+        class FullRefreshZohoStream(ZohoRecruitStream):
             url_base = "https://dummy.com"
             module = stream_module
 
@@ -98,7 +98,7 @@ def test_dynamic_attrs(stream_factory):
         pick_list_values=[],
     )
     stream = stream_factory(ModuleMeta(api_name="Leads", module_name="Leads", api_supported=True, fields=[field]))
-    assert stream.path() == "recruitv2/Leads"
+    assert stream.path() == "/recruit/v2/Leads"
     assert stream.get_json_schema() == {
         "additionalProperties": True,
         "description": "Leads",

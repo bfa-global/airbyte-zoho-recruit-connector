@@ -1,7 +1,7 @@
-# Zoho Crm Source
+# Zoho Recruit Source
 
-This is the repository for the Zoho Crm source connector, written in Python.
-For information about how to use this connector within Airbyte, see [the documentation](https://docs.airbyte.io/integrations/sources/zoho-crm).
+This is the repository for the Zoho Recruit source connector, written in Python.
+For information about how to use this connector within Airbyte, see [the documentation](https://docs.airbyte.io/integrations/sources/zoho-recruit).
 
 ## Local development
 
@@ -36,13 +36,13 @@ If this is mumbo jumbo to you, don't worry about it, just put your deps in `setu
 should work as you expect.
 
 #### Create credentials
-
-**If you are a community contributor**, follow the instructions in the [documentation](https://docs.airbyte.io/integrations/sources/zoho-crm)
-to generate the necessary credentials. Then create a file `secrets/config.json` conforming to the `source_zoho_crm/spec.json` file.
+~
+**If you are a community contributor**, follow the instructions in the [documentation](https://docs.airbyte.io/integrations/sources/zoho-recruit)
+to generate the necessary credentials. Then create a file `secrets/config.json` conforming to the `source_zoho_recruit/spec.json` file.
 Note that any directory named `secrets` is gitignored across the entire Airbyte repo, so there is no danger of accidentally checking in sensitive information.
 See `integration_tests/sample_config.json` for a sample config file.
 
-**If you are an Airbyte core member**, copy the credentials in Lastpass under the secret name `source zoho-crm test creds`
+**If you are an Airbyte core member**, copy the credentials in Lastpass under the secret name `source zoho-recruit test creds`
 and place them into `secrets/config.json`.
 
 ### Locally running the connector
@@ -61,15 +61,15 @@ python main.py read --config secrets/config.json --catalog integration_tests/con
 **Via [`airbyte-ci`](https://github.com/airbytehq/airbyte/blob/master/airbyte-ci/connectors/pipelines/README.md) (recommended):**
 
 ```bash
-airbyte-ci connectors --name=source-zoho-crm build
+airbyte-ci connectors --name=source-zoho-recruit build
 ```
 
-An image will be built with the tag `airbyte/source-zoho-crm:dev`.
+An image will be built with the tag `airbyte/source-zoho-recruit:dev`.
 
 **Via `docker build`:**
 
 ```bash
-docker build -t airbyte/source-zoho-crm:dev .
+docker build -t airbyte/source-zoho-recruit:dev .
 ```
 
 #### Run
@@ -77,10 +77,10 @@ docker build -t airbyte/source-zoho-crm:dev .
 Then run any of the connector commands as follows:
 
 ```
-docker run --rm airbyte/source-zoho-crm:dev spec
-docker run --rm -v $(pwd)/secrets:/secrets airbyte/source-zoho-crm:dev check --config /secrets/config.json
-docker run --rm -v $(pwd)/secrets:/secrets airbyte/source-zoho-crm:dev discover --config /secrets/config.json
-docker run --rm -v $(pwd)/secrets:/secrets -v $(pwd)/integration_tests:/integration_tests airbyte/source-zoho-crm:dev read --config /secrets/config.json --catalog /integration_tests/configured_catalog.json
+docker run --rm airbyte/source-zoho-recruit:dev spec
+docker run --rm -v $(pwd)/secrets:/secrets airbyte/source-zoho-recruit:dev check --config /secrets/config.json
+docker run --rm -v $(pwd)/secrets:/secrets airbyte/source-zoho-recruit:dev discover --config /secrets/config.json
+docker run --rm -v $(pwd)/secrets:/secrets -v $(pwd)/integration_tests:/integration_tests airbyte/source-zoho-recruit:dev read --config /secrets/config.json --catalog /integration_tests/configured_catalog.json
 ```
 
 ## Testing
@@ -88,7 +88,7 @@ docker run --rm -v $(pwd)/secrets:/secrets -v $(pwd)/integration_tests:/integrat
 You can run our full test suite locally using [`airbyte-ci`](https://github.com/airbytehq/airbyte/blob/master/airbyte-ci/connectors/pipelines/README.md):
 
 ```bash
-airbyte-ci connectors --name=source-zoho-crm test
+airbyte-ci connectors --name=source-zoho-recruit test
 ```
 
 ### Customizing acceptance Tests
@@ -108,10 +108,10 @@ We split dependencies between two groups, dependencies that are:
 
 You've checked out the repo, implemented a million dollar feature, and you're ready to share your changes with the world. Now what?
 
-1. Make sure your changes are passing our test suite: `airbyte-ci connectors --name=source-zoho-crm test`
+1. Make sure your changes are passing our test suite: `airbyte-ci connectors --name=source-zoho-recruit test`
 2. Bump the connector version in `metadata.yaml`: increment the `dockerImageTag` value. Please follow [semantic versioning for connectors](https://docs.airbyte.com/contributing-to-airbyte/resources/pull-requests-handbook/#semantic-versioning-for-connectors).
 3. Make sure the `metadata.yaml` content is up to date.
-4. Make the connector documentation and its changelog is up to date (`docs/integrations/sources/zoho-crm.md`).
+4. Make the connector documentation and its changelog is up to date (`docs/integrations/sources/zoho-recruit.md`).
 5. Create a Pull Request: use [our PR naming conventions](https://docs.airbyte.com/contributing-to-airbyte/resources/pull-requests-handbook/#pull-request-title-convention).
 6. Pat yourself on the back for being an awesome contributor.
 7. Someone from Airbyte will take a look at your PR and iterate with you to merge it into master.

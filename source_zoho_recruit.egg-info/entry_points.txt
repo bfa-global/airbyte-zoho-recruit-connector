@@ -1,0 +1,2 @@
+[console_scripts]
+source-zoho-recruit = source_zoho_recruit.run:run

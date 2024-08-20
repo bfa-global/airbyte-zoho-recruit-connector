@@ -6,9 +6,9 @@
 import sys
 
 from airbyte_cdk.entrypoint import launch
-from source_zoho_crm import SourceZohoCrm
+from source_zoho_recruit import SourceZohoRecruit
 
 
 def run():
-    source = SourceZohoCrm()
+    source = SourceZohoRecruit()
     launch(source, sys.argv[1:])

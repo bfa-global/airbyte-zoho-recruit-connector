@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from airbyte_cdk.sources.streams import Stream
 
 
-class SourceZohoCrm(AbstractSource):
+class SourceZohoRecruit(AbstractSource):
     def check_connection(self, logger: logging.Logger, config: Mapping[str, Any]) -> Tuple[bool, any]:
         """
         :param config:  the user-input config object conforming to the connector's spec.json

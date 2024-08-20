@@ -1,11 +1,11 @@
 # See [Connector Acceptance Tests](https://docs.airbyte.com/connector-development/testing-connectors/connector-acceptance-tests-reference)
 # for more information about how to configure these tests
-connector_image: airbyte/source-zoho-crm:dev
+connector_image: airbyte/source-zoho-recruit:dev
 test_strictness_level: "high"
 acceptance_tests:
   spec:
     tests:
-      - spec_path: "source_zoho_crm/spec.json"
+      - spec_path: "source_zoho_recruit/spec.json"
   connection:
     tests:
       - config_path: "secrets/config.json"
@@ -22,13 +22,13 @@ acceptance_tests:
           path: "integration_tests/expected_records.jsonl"
           exact_order: no
         empty_streams:
-          - name: incremental_notes_zoho_crm_stream
+          - name: incremental_notes_zoho_recruit_stream
             bypass_reason: "no data"
-          - name: incremental_deals_zoho_crm_stream
+          - name: incremental_deals_zoho_recruit_stream
             bypass_reason: "no data"
-          - name: incremental_accounts_zoho_crm_stream
+          - name: incremental_accounts_zoho_recruit_stream
             bypass_reason: "no data"
-          - name: incremental_calls_zoho_crm_stream
+          - name: incremental_calls_zoho_recruit_stream
             bypass_reason: "no data"
   incremental:
     tests:
@@ -41,6 +41,6 @@ acceptance_tests:
       - config_path: "secrets/config.json"
         configured_catalog_path: "integration_tests/configured_catalog.json"
         ignored_fields:
-          incremental_contacts_zoho_crm_stream:
+          incremental_contacts_zoho_recruit_stream:
             - name: Contact_Auto_Number
               bypass_reason: "depend on changing data"

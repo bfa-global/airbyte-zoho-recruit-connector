@@ -5,8 +5,8 @@
 from dataclasses import asdict
 
 import pytest
-from source_zoho_crm.exceptions import IncompleteMetaDataException, UnknownDataTypeException
-from source_zoho_crm.types import FieldMeta, ModuleMeta, ZohoBaseType, ZohoPickListItem
+from source_zoho_recruit.exceptions import IncompleteMetaDataException, UnknownDataTypeException
+from source_zoho_recruit.types import FieldMeta, ModuleMeta, ZohoBaseType, ZohoPickListItem
 
 from .parametrize import datatype_inputs
 

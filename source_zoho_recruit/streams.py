@@ -22,7 +22,7 @@ from .types import FieldMeta, ModuleMeta, ZohoPickListItem
 EMPTY_BODY_STATUSES = (HTTPStatus.NO_CONTENT, HTTPStatus.NOT_MODIFIED)
 
 
-class ZohoCrmStream(HttpStream, ABC):
+class ZohoRecruitStream(HttpStream, ABC):
     primary_key: str = "id"
     module: ModuleMeta = None
 
@@ -44,9 +44,10 @@ class ZohoCrmStream(HttpStream, ABC):
         yield from data
 
     def path(self, *args, **kwargs) -> str:
-        return f"recruitv2/{self.module.api_name}"
+        return f"/recruit/v2/{self.module.api_name}"
 
     def get_json_schema(self) -> Optional[Dict[Any, Any]]:
+        # print("get_json_schema", self.module.schema)
         try:
             return asdict(self.module.schema)
         except IncompleteMetaDataException:
@@ -65,7 +66,7 @@ class ZohoCrmStream(HttpStream, ABC):
             raise
 
 
-class IncrementalZohoCrmStream(ZohoCrmStream):
+class IncrementalZohoRecruitStream(ZohoRecruitStream):
     cursor_field = "Modified_Time"
 
     def __init__(self, authenticator: "requests.auth.AuthBase" = None, config: Mapping[str, Any] = None):
@@ -144,10 +145,10 @@ class ZohoStreamFactory:
             for batch in chunk(max_concurrent_request, modules):
                 executor.map(lambda module: populate_module(module), batch)
 
-        bases = (IncrementalZohoCrmStream,)
+        bases = (IncrementalZohoRecruitStream,)
         for module in modules:
             stream_cls_attrs = {"url_base": self.api.api_url, "module": module}
-            stream_cls_name = f"Incremental{module.api_name}ZohoCRMStream"
+            stream_cls_name = f"Incremental{module.api_name}ZohoRecruitStream"
             incremental_stream_cls = type(stream_cls_name, bases, stream_cls_attrs)
             stream = incremental_stream_cls(self.api.authenticator, config=self._config)
             if stream.get_json_schema():

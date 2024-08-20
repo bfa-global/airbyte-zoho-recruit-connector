@@ -1,0 +1,11 @@
+Metadata-Version: 2.1
+Name: source_zoho_recruit
+Version: 0.0.0
+Summary: Source implementation for Zoho Recruit.
+Author: Airbyte
+Author-email: contact@airbyte.io
+Requires-Dist: airbyte-cdk
+Provides-Extra: tests
+Requires-Dist: requests-mock~=1.9.3; extra == "tests"
+Requires-Dist: pytest~=6.1; extra == "tests"
+Requires-Dist: pytest-mock~=3.6.1; extra == "tests"
