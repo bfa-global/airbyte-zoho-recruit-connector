@@ -47,7 +47,6 @@ class ZohoRecruitStream(HttpStream, ABC):
         return f"/recruit/v2/{self.module.api_name}"
 
     def get_json_schema(self) -> Optional[Dict[Any, Any]]:
-        # print("get_json_schema", self.module.schema)
         try:
             return asdict(self.module.schema)
         except IncompleteMetaDataException:
@@ -68,6 +67,7 @@ class ZohoRecruitStream(HttpStream, ABC):
 
 class IncrementalZohoRecruitStream(ZohoRecruitStream):
     cursor_field = "Modified_Time"
+    possible_cursor_fields = [ "Modified_Time", "Updated_On"]
 
     def __init__(self, authenticator: "requests.auth.AuthBase" = None, config: Mapping[str, Any] = None):
         super().__init__(authenticator)
@@ -84,11 +84,21 @@ class IncrementalZohoRecruitStream(ZohoRecruitStream):
     @state.setter
     def state(self, value: Mapping[str, Any]):
         self._state = value
+        
+    def get_cursor_field(self, record: Mapping[str, Any]) -> str:
+        """Return the first available cursor field from the record."""
+        for field in self.possible_cursor_fields:
+            if field in record:
+                return field
+        raise KeyError(f"None of the possible cursor fields {self.possible_cursor_fields} were found in the record.")
 
+        
     def read_records(self, *args, **kwargs) -> Iterable[Mapping[str, Any]]:
         for record in super().read_records(*args, **kwargs):
+            # Find the correct cursor field in the record
+            cursor_field_in_record = self.get_cursor_field(record)            
             current_cursor_value = datetime.datetime.fromisoformat(self.state[self.cursor_field])
-            latest_cursor_value = datetime.datetime.fromisoformat(record[self.cursor_field])
+            latest_cursor_value = datetime.datetime.fromisoformat(record[cursor_field_in_record])
             new_cursor_value = max(latest_cursor_value, current_cursor_value)
             self.state = {self.cursor_field: new_cursor_value.isoformat("T", "seconds")}
             yield record
@@ -117,11 +127,19 @@ class ZohoStreamFactory:
     def _populate_fields_meta(self, module: ModuleMeta):
         fields_meta_json = self.api.fields_settings(module.api_name)
         fields_meta = []
+        
         for field in fields_meta_json:
             pick_list_values = field.get("pick_list_values", [])
             if pick_list_values:
-                field["pick_list_values"] = [ZohoPickListItem.from_dict(pick_list_item) for pick_list_item in field["pick_list_values"]]
-            fields_meta.append(FieldMeta.from_dict(field))
+                field["pick_list_values"] = [ZohoPickListItem.from_dict(pick_list_item) for pick_list_item in pick_list_values]
+            
+            try: # This is the fix to allow skipping fields that don't have necessary data for the pipeline
+                # Attempt to create FieldMeta object
+                fields_meta.append(FieldMeta.from_dict(field))
+            except TypeError as e:
+                # Log the error and continue with the next field
+                print(f"Error creating FieldMeta for {module.api_name} {field.get('api_name', 'unknown field')}: {e}")
+        
         module.fields = fields_meta
 
     def _populate_module_meta(self, module: ModuleMeta):
@@ -133,8 +151,12 @@ class ZohoStreamFactory:
         streams = []
 
         def populate_module(module):
-            self._populate_module_meta(module)
-            self._populate_fields_meta(module)
+            try: # This allows us to report on errors 
+                self._populate_module_meta(module)
+                self._populate_fields_meta(module)
+            except Exception as e:
+                print(f"Error while populating module {module.api_name}: {e}")
+
 
         def chunk(max_len, lst):
             for i in range(math.ceil(len(lst) / max_len)):
@@ -144,6 +166,8 @@ class ZohoStreamFactory:
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_concurrent_request) as executor:
             for batch in chunk(max_concurrent_request, modules):
                 executor.map(lambda module: populate_module(module), batch)
+                
+        print("Finished getting data for all modules")
 
         bases = (IncrementalZohoRecruitStream,)
         for module in modules:

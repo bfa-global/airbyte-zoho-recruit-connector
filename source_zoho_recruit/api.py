@@ -73,6 +73,7 @@ class ZohoAPI:
             # Zoho Recruit returns `No content` for Metadata of some modules
             logger.warning(f"{key.capitalize()} Metadata inaccessible: {response.content} [HTTP status {response.status_code}]")
             return []
+        # print(f"{self.api_url}{path} Parms: {params} Response[{key}]: {response.json()[key]}")
         return response.json()[key]
 
     def module_settings(self, module_name: str) -> List[MutableMapping[Any, Any]]:
@@ -82,9 +83,7 @@ class ZohoAPI:
         return self._json_from_path("/recruit/v2/settings/modules", key="modules")
 
     def fields_settings(self, module_name: str) -> List[MutableMapping[Any, Any]]:
-        # print("getting field settings for ", module_name)
         json = self._json_from_path("/recruit/v2/settings/fields", key="fields", params={"module": module_name})
-        # print("got field settings for ", module_name, [{ "api_name": field.api_name } for field in json])
         return json
 
     def check_connection(self) -> Tuple[bool, Any]:
